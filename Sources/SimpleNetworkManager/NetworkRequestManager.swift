@@ -9,6 +9,10 @@ import Alamofire
 import Foundation
 
 public class NetworkRequestManager: ValidatedRequestManager {
+    // MARK: Lifecycle
+
+    public init() {}
+
     // MARK: Public
 
     public var validation: (URLRequest?, HTTPURLResponse, Data?) -> Result<Void, Error> = { request, response, data in
