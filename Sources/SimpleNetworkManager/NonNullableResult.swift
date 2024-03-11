@@ -1,6 +1,6 @@
 //
 //  NonNullableResult.swift
-//  WidgetMe
+//
 //
 //  Created by Bradley Windybank on 26/09/23.
 //

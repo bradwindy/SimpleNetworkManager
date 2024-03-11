@@ -1,6 +1,6 @@
 //
 //  NetworkRequestManager.swift
-//  WidgetMe
+//
 //
 //  Created by Bradley Windybank on 26/09/23.
 //
@@ -15,29 +15,10 @@ public class NetworkRequestManager: ValidatedRequestManager {
 
     // MARK: Public
 
-    public var validation: (URLRequest?, HTTPURLResponse, Data?) -> Result<Void, Error> = { request, response, data in
-        let acceptableStatusCodes = 200 ..< 300
-
-        let errorData: [String: String] = [
-            "request": request?.description ?? "nil request",
-            "response": response.description,
-            "data": data?.description ?? "nil data",
-        ]
-
-        guard acceptableStatusCodes.contains(response.statusCode) else {
-            return .failure(NetworkRequestManagerError(kind: .non200StatusCode, data: errorData))
-        }
-
-        guard response.mimeType == "application/json" else {
-            return .failure(NetworkRequestManagerError(kind: .nonJsonResponse, data: errorData))
-        }
-
-        return .success(())
-    }
-
     public func makeRequest<ResponseType: NonNullableResult>(
         endpoint: String,
-        parameters: inout [String: Any]?
+        parameters: inout [String: Any]?,
+        validContentTypes: [String] = ["application/json"]
     )
         async throws -> ResponseType
     {
@@ -48,7 +29,8 @@ public class NetworkRequestManager: ValidatedRequestManager {
         let request = AF.request(endpoint, parameters: parameters, headers: headers)
 
         let result = await request
-            .validate(validation)
+            .validate()
+            .validate(contentType: validContentTypes)
             .serializingDecodable(ResponseType.self, decoder: decoder)
             .result
 
