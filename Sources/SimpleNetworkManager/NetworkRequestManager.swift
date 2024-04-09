@@ -18,7 +18,8 @@ public class NetworkRequestManager: ValidatedRequestManager {
     public func makeRequest<ResponseType: NonNullableResult>(
         endpoint: String,
         parameters: inout [String: Any]?,
-        validContentTypes: [String] = ["application/json"]
+        validContentTypes: [String] = ["application/json"],
+        decoder: DataDecoder = JSONDecoder()
     )
         async throws -> ResponseType
     {
@@ -44,8 +45,4 @@ public class NetworkRequestManager: ValidatedRequestManager {
     }
 
     public func applyAuth(headers _: inout HTTPHeaders?, parameters _: inout [String: Any]?) {}
-
-    // MARK: Private
-
-    private var decoder = JSONDecoder()
 }
