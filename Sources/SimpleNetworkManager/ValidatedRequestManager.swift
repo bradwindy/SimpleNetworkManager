@@ -13,3 +13,22 @@ public protocol ValidatedRequestManager {
 
     func applyAuth(headers: inout HTTPHeaders?, parameters: inout [String: Any]?)
 }
+
+/// Wrappers around common content types
+public extension ValidatedRequestManager {
+    func makeJsonRequest<ResponseType: NonNullableResult>(endpoint: String, parameters: inout [String: Any]?) async throws -> ResponseType {
+        try await makeRequest(endpoint: endpoint, parameters: &parameters, validContentTypes: ["application/json"])
+    }
+    
+    func makeHtmlRequest<ResponseType: NonNullableResult>(endpoint: String, parameters: inout [String: Any]?) async throws -> ResponseType {
+        try await makeRequest(endpoint: endpoint, parameters: &parameters, validContentTypes: ["text/html"])
+    }
+    
+    func makeJpegRequest<ResponseType: NonNullableResult>(endpoint: String, parameters: inout [String: Any]?) async throws -> ResponseType {
+        try await makeRequest(endpoint: endpoint, parameters: &parameters, validContentTypes: ["image/jpeg"])
+    }
+    
+    func makeXmlRequest<ResponseType: NonNullableResult>(endpoint: String, parameters: inout [String: Any]?) async throws -> ResponseType {
+        try await makeRequest(endpoint: endpoint, parameters: &parameters, validContentTypes: ["application/xml"])
+    }
+}
