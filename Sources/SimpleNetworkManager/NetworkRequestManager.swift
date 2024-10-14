@@ -8,7 +8,7 @@
 import Alamofire
 import Foundation
 
-public class NetworkRequestManager: ValidatedRequestManager {
+public final class NetworkRequestManager: ValidatedRequestManager {
     // MARK: Lifecycle
 
     public init() {}
@@ -17,17 +17,15 @@ public class NetworkRequestManager: ValidatedRequestManager {
 
     public func makeRequest<ResponseType: NonNullableResult>(
         endpoint: String,
-        parameters: inout [String: Any]?,
+        parameters: [String: Sendable]?,
         validContentTypes: [String] = ["application/json"],
         decoder: DataDecoder = JSONDecoder()
     )
         async throws -> ResponseType
     {
-        var headers: HTTPHeaders? = nil
+        let (_, newParameters) = applyAuth(headers: nil, parameters: parameters)
 
-        applyAuth(headers: &headers, parameters: &parameters)
-
-        let request = AF.request(endpoint, parameters: parameters, headers: headers)
+        let request = AF.request(endpoint, parameters: newParameters, headers: nil)
 
         let result = await request
             .validate()
@@ -44,5 +42,7 @@ public class NetworkRequestManager: ValidatedRequestManager {
         }
     }
 
-    public func applyAuth(headers _: inout HTTPHeaders?, parameters _: inout [String: Any]?) {}
+    public func applyAuth(headers: HTTPHeaders?, parameters: [String: Sendable]?) -> (HTTPHeaders?, [String: Sendable]?) {
+        (headers, parameters)
+    }
 }
