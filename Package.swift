@@ -21,8 +21,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.10.0"),
-        .package(url: "https://github.com/bradwindy/RichError.git", from: "2.1.0"),
+        .package(url: "https://www.github.com/Alamofire/Alamofire.git", "5.10.0"..<"6.0.0"),
+        .package(url: "https://www.github.com/bradwindy/RichError.git", "2.1.0"..<"3.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
